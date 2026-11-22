@@ -33,10 +33,86 @@
       </ul>
     </section>
     <section aria-labelledby="contact-heading">
-<h2 id="contact-heading">Contact</h2>
-      <p>Contact details will be added when this portfolio is ready to share.</p>
-      <h3>Ways to connect</h3>
-      <p>Placeholder: Add a public email address and a GitHub profile link here.</p>
+      <h2 id="contact-heading">Contact</h2>
+<p>All fields are required. This demo checks your entries locally.</p>
+
+<form id="contact-form">
+  <fieldset>
+    <legend>Contact details</legend>
+
+    <p>
+      <label for="contact-name">Name</label><br>
+      <input id="contact-name" name="name" autocomplete="name"
+             required aria-describedby="name-error">
+      <span id="name-error"></span>
+    </p>
+
+    <p>
+      <label for="contact-email">Email</label><br>
+      <input id="contact-email" name="email" type="email"
+             autocomplete="email" required aria-describedby="email-error">
+      <span id="email-error"></span>
+    </p>
+  </fieldset>
+
+  <p>
+    <label for="contact-subject">Subject</label><br>
+    <input id="contact-subject" name="subject"
+           required aria-describedby="subject-error">
+    <span id="subject-error"></span>
+  </p>
+
+  <p>
+    <label for="contact-message">Message</label><br>
+    <textarea id="contact-message" name="message" rows="5"
+              required aria-describedby="message-error"></textarea>
+    <span id="message-error"></span>
+  </p>
+
+  <button type="submit" disabled>Check message</button>
+  <p id="contact-status" role="status"></p>
+</form>
+
+<script>
+  const form = document.querySelector('#contact-form');
+  const status = document.querySelector('#contact-status');
+  const fields = [
+    ['name', 'Enter your name.'],
+    ['email', 'Enter an email address like name@example.com.'],
+    ['subject', 'Enter a subject.'],
+    ['message', 'Enter a message.']
+  ];
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    status.textContent = '';
+    let firstInvalid = null;
+
+    for (const [name, errorMessage] of fields) {
+      const field = document.getElementById('contact-' + name);
+      const error = document.getElementById(name + '-error');
+      const invalid = !field.value.trim() || !field.validity.valid;
+
+      error.textContent = invalid ? 'Error: ' + errorMessage : '';
+
+      if (invalid) {
+        field.setAttribute('aria-invalid', 'true');
+        firstInvalid ??= field;
+      } else {
+        field.removeAttribute('aria-invalid');
+      }
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
+    } else {
+      status.textContent = 'All fields are valid. This demo did not send a message.';
+    }
+  });
+
+  form.noValidate = true;
+  form.querySelector('button').disabled = false;
+</script>
     </section>
   </main>
   <footer>
